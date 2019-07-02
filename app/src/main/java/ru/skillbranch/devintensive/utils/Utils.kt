@@ -3,7 +3,7 @@ package ru.skillbranch.devintensive.utils
 import java.lang.Character.toUpperCase
 
 object Utils {
-    fun  parseFullname(fullName:String?):Pair<String?, String?>{
+    fun parseFullname(fullName: String?): Pair<String?, String?> {
         val parts: List<String>? = fullName?.split(" ")
         var firstName = parts?.getOrNull(0)
         var lastName = parts?.getOrNull(1)
@@ -17,7 +17,7 @@ object Utils {
         return firstName to lastName
     }
 
-    fun transliteration(payload: String, divider:String = " "): String {
+    fun transliteration(payload: String, divider: String = " "): String {
         var result = ""
         val u1 = payload.split(divider)
         for (y in u1) {
@@ -26,10 +26,8 @@ object Utils {
                     if (trans(char.toString()).length > 1) {
                         result += trans(char.toString())[0].toUpperCase()
                         result += trans(char.toString())[1]
-                    }
-                    else result += trans(char.toString()).toUpperCase()
-                }
-                else {
+                    } else result += trans(char.toString()).toUpperCase()
+                } else {
                     result += trans(char.toString())
                 }
             }
@@ -39,11 +37,27 @@ object Utils {
     }
 
     fun toInitials(firstName: String?, lastName: String?): String? {
-        return ""
+        val r1 = if (firstName != null) {
+                            if (trans(firstName[0].toString()).length > 1) {
+                                "${trans(firstName[0].toString())[0].toUpperCase()}${trans(firstName[0].toString())[1]}"
+                            } else {
+                                trans(firstName[0].toString()).toUpperCase()
+                            }
+                        }
+                        else ""
+        val r2 = if (lastName != null) {
+                            if (trans(lastName[0].toString()).length > 1) {
+                                "${trans(lastName[0].toString())[0].toUpperCase()}${trans(lastName[0].toString())[1]}"
+                            } else {
+                                trans(lastName[0].toString()).toUpperCase()
+                            }
+                        }
+                        else ""
+        return r1 + r2
     }
 
-    fun trans(string: String): String{
-        val str = when(string){
+    fun trans(string: String): String {
+        val str = when (string) {
             "а" -> "a"
             "б" -> "b"
             "в" -> "v"
