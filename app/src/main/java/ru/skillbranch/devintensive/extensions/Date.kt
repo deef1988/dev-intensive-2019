@@ -3,12 +3,13 @@ package ru.skillbranch.devintensive.extensions
 import java.text.SimpleDateFormat
 import java.util.*
 import java.math.*
+import java.util.concurrent.TimeUnit
 
 const val SECOND = 1000L
 const val MINUTE = 60 * SECOND
 const val HOUR = 60 * MINUTE
 const val DAY = 24 * HOUR
-const val YEAR = 360 * HOUR
+const val YEAR = 360 * DAY
 
 fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
     val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
@@ -23,6 +24,7 @@ fun Date.add(valuse: Int, units: TimeUnits = TimeUnits.SECOND): Date {
         TimeUnits.MINUTE -> valuse * MINUTE
         TimeUnits.HOUR -> valuse * HOUR
         TimeUnits.DAY -> valuse * DAY
+        TimeUnits.YEAR -> valuse * YEAR
     }
     this.time = time
     return this
@@ -30,87 +32,57 @@ fun Date.add(valuse: Int, units: TimeUnits = TimeUnits.SECOND): Date {
 
 fun Date.humanizeDiff(date: Date = Date()): String {
     var time = this.time
-    var delta = (time - date.time) // MINUTE
+    var delta = (time - date.time)
     var str = ""
+
+
     if (delta > 0) {
-        delta += 50
-        if (delta / YEAR > 0) {
-            str = "более чем через год"
-        } else if (delta / DAY > 0) {
-            val ext = (delta / DAY)
-            str = when (delta / DAY) {
-                in 0..1 -> "Через один день"
-                in 2..4 -> "Через ${ext} дня"
-                else -> "Через ${ext} дней"
-            }
-        } else if (delta / HOUR > 0) {
-            val ext = delta / HOUR
-            str = when (delta * -1 / HOUR) {
-                in 0..1 -> "Через один час"
-                in 2..4 -> "Через ${ext} часа"
-                else -> "Через ${ext} часов"
-            }
-        } else if (delta / MINUTE > 0) {
-            val ext = delta / MINUTE
-            str = when (delta / MINUTE) {
-                in 0..1 -> "Через одну минуту"
-                in 2..4 -> "Через ${ext} минтуты"
-                else -> "Через ${ext} минут"
-            }
-        } else if (delta / SECOND > 0) {
-            val ext = delta / SECOND
-            str = when (delta/ SECOND) {
-                in 0..1 -> "Через одну секунду"
-                in 2..4 -> "Через ${ext} секунды"
-                else -> "Через ${ext} сикунд"
-            }
+        delta = (delta+50) / SECOND
+        println(delta)
+        str += when (delta) {
+            in 0..1 -> "только что"
+            in 2..45 -> "несколько секунд назад"
+            in 46..75 -> "минуту назад"
+            in 76..2700 -> "${delta/60} ${get_name_time(delta/60, TimeUnits.MINUTE)} назад"
+            in 2701..4500 -> "час назад"
+            in 4501..79200 -> "${delta/60/60} ${get_name_time(delta/60/60, TimeUnits.HOUR)} назад"
+            in 79200..93600 -> "день назад"
+            in 93600..77760000 -> "${delta/60/60/60} ${get_name_time(delta/60/60/60, TimeUnits.DAY)} назад"
+            else -> "более года назад"
         }
     } else {
-        if (delta * -1 / YEAR > 0) {
-            str = "более года назад"
+        delta = (delta) / SECOND
+        str += when (delta) {
+            in 0..1 -> "только что будет"
+            in 2..45 -> "более несколько секунд назад"
+            in 46..75 -> "более минуты назад"
+            in 76..2700 -> "более ${delta/60} ${get_name_time(delta/60, TimeUnits.MINUTE)} назад"
+            in 2701..4500 -> "более часа назад"
+            in 4501..79200 -> "более ${delta/60/60} ${get_name_time(delta/60/60, TimeUnits.HOUR)} назад"
+            in 79200..93600 -> "более деня назад"
+            in 93600..77760000 -> "более ${delta/60/60/60} ${get_name_time(delta/60/60/60, TimeUnits.DAY)} назад"
+            else -> "более чем через год"
         }
-        if (delta * -1 / DAY > 0) {
-            val ext = delta * -1 / DAY
-            str = when (delta * -1 / DAY) {
-                in 0..1 -> "Один день назад"
-                in 2..4 -> "${ext} дня назад"
-                else -> "${ext} дней назад"
-            }
-        } else if (delta * -1 / HOUR > 0) {
-            val ext = delta * -1 / HOUR
-            str = when (delta * -1 / HOUR) {
-                in 0..1 -> "Один час назад"
-                in 2..4 -> "${ext} часа назад"
-                else -> "${ext} часов назад"
-            }
-        } else if (delta * -1 / MINUTE > 0) {
-            val ext = delta * -1 / DAY
-            str = when (delta * -1 / DAY) {
-                in 0..1 -> "Один день назад"
-                in 2..4 -> "${ext} дня назад"
-                else -> "${ext} дней назад"
-            }
-        } else if (delta * -1 / SECOND > 0) {
-            val ext = delta * -1 / MINUTE
-            str = when (delta * -1 / MINUTE) {
-                in 0..1 -> "Одну минуту назад"
-                in 2..4 -> "${ext} минтуты назад"
-                else -> "${ext} минут назад"
-            }
-        } else if (delta / SECOND > 0) {
-            val ext = delta * -1 / SECOND
-            str = when (delta * -1 / SECOND) {
-                in 0..1 -> "Одну секунду назад"
-                in 2..4 -> "${ext} секунды назад"
-                else -> "${ext} сикунд назад"
-            }
+//        str = "123"
     }
 
+    return "${str}"
+}
+
+fun get_name_time(time: Long, units: TimeUnits = TimeUnits.SECOND ):String{
+//    println("time   ${time}")
+    val str = when(units){
+        TimeUnits.YEAR -> if(time<4){"года"}else{"лет"}
+        TimeUnits.DAY -> if(time<4){"дня"}else{"дней"}
+        TimeUnits.HOUR -> if(time<4){"часа"}else{"часов"}
+        TimeUnits.MINUTE -> if(time<4){"минуты"}else{"минут"}
+        else -> ""
     }
     return "${str}"
 }
 
 enum class TimeUnits {
+    YEAR,
     SECOND,
     MINUTE,
     HOUR,
