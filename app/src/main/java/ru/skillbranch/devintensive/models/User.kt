@@ -31,9 +31,6 @@ data class User(
         private var lastId: Int = -1
         fun makeUser(fullName: String?): User {
             lastId++
-//            val parts: List<String>? = fullName?.split(" ")
-//            val firstName = parts?.getOrNull(0)
-//            val lastName = parts?.getOrNull(1)
             val (firstName, lastName) = Utils.parseFullname(fullName)
             if ((lastName == null) or (firstName == null) or (lastName == "") or (firstName == "")) {
                 return User(id = "$lastId")
