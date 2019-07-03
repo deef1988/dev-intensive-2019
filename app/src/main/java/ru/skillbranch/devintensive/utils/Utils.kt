@@ -8,10 +8,10 @@ object Utils {
         var firstName = parts?.getOrNull(0)
         var lastName = parts?.getOrNull(1)
         if ((firstName == null) or (firstName == "")) {
-            firstName = "null"
+            firstName = null
         }
         if ((lastName == null) or (lastName == "")) {
-            lastName = "null"
+            lastName = null
         }
 //        return Pair(firstName, lastName)
         return firstName to lastName
