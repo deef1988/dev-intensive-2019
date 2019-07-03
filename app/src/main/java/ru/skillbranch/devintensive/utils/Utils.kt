@@ -19,7 +19,8 @@ object Utils {
 
     fun transliteration(payload: String, divider: String = " "): String {
         var result = ""
-        val u1 = payload.split(divider)
+        var first = true
+        val u1 = payload.split(" ")
         for (y in u1) {
             for ((ind, char) in y.withIndex()) {
                 if (ind == 0) {
@@ -31,29 +32,40 @@ object Utils {
                     result += trans(char.toString())
                 }
             }
-            result += " "
+            if (first == true) {
+                result += divider
+                first = false
+            }
         }
         return result
     }
 
     fun toInitials(firstName: String?, lastName: String?): String? {
+
         val r1 = if (firstName != null) {
-                            if (trans(firstName[0].toString()).length > 1) {
-                                "${trans(firstName[0].toString())[0].toUpperCase()}${trans(firstName[0].toString())[1]}"
-                            } else {
-                                trans(firstName[0].toString()).toUpperCase()
-                            }
-                        }
-                        else ""
+            if (firstName == "") {
+                ""
+            } else if (trans(firstName[0].toString()).length > 1) {
+                "${trans(firstName[0].toString())[0].toUpperCase()}${trans(firstName[0].toString())[1]}"
+            } else {
+                trans(firstName[0].toString()).toUpperCase()
+            }
+        } else null
         val r2 = if (lastName != null) {
-                            if (trans(lastName[0].toString()).length > 1) {
-                                "${trans(lastName[0].toString())[0].toUpperCase()}${trans(lastName[0].toString())[1]}"
-                            } else {
-                                trans(lastName[0].toString()).toUpperCase()
-                            }
-                        }
-                        else ""
-        return r1 + r2
+            if (lastName == "") {
+                ""
+            } else if (trans(lastName[0].toString()).length > 1) {
+                "${trans(lastName[0].toString())[0].toUpperCase()}${trans(lastName[0].toString())[1]}"
+            } else {
+                trans(lastName[0].toString()).toUpperCase()
+            }
+        } else null
+        println("$r1 $r2")
+        if ((r1 == null) and (r2 == null)) return null
+        else if ((r1 == null) and (r2 != null)) return r2
+        else if ((r1 != null) and (r2 == null)) return r1
+        else if (((r1 == "") and (r2 == "")) or ((r1 == "") and (r2 == " ")) or ((r1 == " ") and (r2 == "")) or ((r1 == " ") and (r2 == " "))) return null
+        else return r1 + r2
     }
 
     fun trans(string: String): String {
