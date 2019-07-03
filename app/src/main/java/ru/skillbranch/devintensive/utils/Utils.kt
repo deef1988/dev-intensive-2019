@@ -60,7 +60,7 @@ object Utils {
                 trans(lastName[0].toString()).toUpperCase()
             }
         } else null
-        println("$r1 $r2")
+//        println("$r1 $r2")
         if ((r1 == null) and (r2 == null)) return null
         else if ((r1 == null) and (r2 != null)) return r2
         else if ((r1 != null) and (r2 == null)) return r1
@@ -103,6 +103,32 @@ object Utils {
             "э" -> "e"
             "ю" -> "yu"
             "я" -> "ya"
+            "a" -> "a"
+            "b" -> "b"
+            "c" -> "c"
+            "d" -> "d"
+            "e" -> "e"
+            "f" -> "f"
+            "g" -> "g"
+            "h" -> "h"
+            "i" -> "i"
+            "j" -> "j"
+            "k" -> "k"
+            "l" -> "l"
+            "m" -> "m"
+            "n" -> "n"
+            "o" -> "o"
+            "p" -> "p"
+            "q" -> "q"
+            "r" -> "r"
+            "s" -> "s"
+            "t" -> "t"
+            "u" -> "u"
+            "v" -> "v"
+            "w" -> "w"
+            "x" -> "x"
+            "y" -> "y"
+            "z" -> "z"
             " " -> " "
             else -> {
                 trans(string.toLowerCase())
