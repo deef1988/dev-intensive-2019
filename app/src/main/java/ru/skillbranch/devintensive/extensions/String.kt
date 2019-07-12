@@ -1,9 +1,9 @@
 package ru.skillbranch.devintensive.extensions
 
-fun String.truncate(string: String, len: Int = 16): String {
+fun String.truncate(len: Int = 16): String {
     //Удалить пробелы в конце
     // проверить длину строки, если больше добавить ..., если не то нечего не делать
-    var result = drop_space_end(string)
+    var result = drop_space_end(this)
     if (result.length >= len) {
         result = result.dropLast(result.length - len)
         result = drop_space_end(result)
